@@ -57,9 +57,19 @@ const tick = () => {
 
 
     // Update camera 
-    camera.position.x = cursor.x * 10
-    camera.position.y = cursor.y * 10
-    camera.lookAt(new THREE.Vector3()) // We make the camera look at the center of the scene
+    // the code below gives a full view of the cube
+    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
+    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
+    camera.position.y = cursor.y * 5
+
+    // the below code does not give a full view, we cannot see the back of the cube
+    // camera.position.x = cursor.x * 10
+    // camera.position.y = cursor.y * 10
+
+   // camera.lookAt(new THREE.Vector3()) // We make the camera look at the center of the scene
+    camera.lookAt(mesh.position) // We make the camera look at the mesh which gets the same result as the code above
+
+
     // Update objects
     // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
     // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
