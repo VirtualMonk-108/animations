@@ -28,4 +28,27 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
-renderer.render(scene, camera)
+
+// We need to get the delta time between each frame
+ let time = Date.now()
+
+// Animation
+const tick = () => {
+    // Current Time
+    const currentTime = Date.now()
+
+    // Delta Time
+    const deltaTime = currentTime - time
+    time = currentTime // We need to update the time variable
+
+    // Update objects
+    mesh.rotation.y += 0.001 * deltaTime // We multiply the rotation by the delta time
+
+    // Render - we moved this from outside the tick function to inside it
+    renderer.render(scene, camera)
+
+    // Call tick again on the next frame
+    window.requestAnimationFrame(tick)
+}
+
+tick()
