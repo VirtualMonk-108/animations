@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import gsap from 'gsap'
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -29,20 +30,18 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 
-// We need to get the delta time between each frame
- let time = Date.now()
+// Time We create a clock object
+const clock = new THREE.Clock()
 
 // Animation
 const tick = () => {
-    // Current Time
-    const currentTime = Date.now()
 
-    // Delta Time
-    const deltaTime = currentTime - time
-    time = currentTime // We need to update the time variable
+    // Elapsed time
+    const elapsedTime = clock.getElapsedTime() // We get the elapsed time since the clock was created
 
     // Update objects
-    mesh.rotation.y += 0.001 * deltaTime // We multiply the rotation by the delta time
+    mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
+    mesh.rotation.x = elapsedTime // We rotate the mesh on the y axis
 
     // Render - we moved this from outside the tick function to inside it
     renderer.render(scene, camera)
