@@ -1,6 +1,20 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
 
+/*
+CURSOR
+We will use native JS to get the mouse coordinates
+*/
+
+const cursor = {
+    x: 0,
+    y: 0
+}
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX / sizes.width -0.5
+    cursor.y = - (event.clientY / sizes.height -0.5)
+})
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -24,31 +38,8 @@ const sizes = {
 // the second parameter is the aspect ratio and it's horizontal - the width divided by the height
 // the third parameter is the near clipping plane - the closest point that the camera can see
 // the fourth parameter is the far clipping plane - the furthest point that the camera can see
-//const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-
-// orthographic camera
-// with this camera you have to provide four parameters
-// these are the left, right, top and bottom - these are the dimensions of the camera 
-// and the distance from the center of the camera to the left, right, top and bottom
-// we do this because unlike the perspective camera, this camera is like a box
-// and orthographic camera's field of view is not vertical but it's horizontal
-// this camera stretches the objects viewed by it to fit the camera's dimensions
-// this can be solved by calculating the aspect ratio
-const aspectRatio = sizes.width / sizes.height
-
-const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100)
-camera.position.x = 2
-camera.position.y = 2
-camera.position.z = 2
-
-camera.lookAt(mesh.position) // We make the camera look at the mesh
-scene.add(camera)
-
-// the problem with perspective camera is that it distorts the objects 
-// that are closer to the camera and makes them look bigger while the objects that are f
-// further away look smaller
-
-
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+camera.position.z = 3 // We move the camera back on the z axis
 // Renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
@@ -64,9 +55,14 @@ const tick = () => {
     // Elapsed time
     const elapsedTime = clock.getElapsedTime() // We get the elapsed time since the clock was created
 
+
+    // Update camera 
+    camera.position.x = cursor.x * 10
+    camera.position.y = cursor.y * 10
+    camera.lookAt(new THREE.Vector3()) // We make the camera look at the center of the scene
     // Update objects
     // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
-    mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
+    // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
 
     // Render - we moved this from outside the tick function to inside it
     renderer.render(scene, camera)
