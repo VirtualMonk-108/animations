@@ -24,7 +24,19 @@ const sizes = {
 // the second parameter is the aspect ratio and it's horizontal - the width divided by the height
 // the third parameter is the near clipping plane - the closest point that the camera can see
 // the fourth parameter is the far clipping plane - the furthest point that the camera can see
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+//const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+
+// orthographic camera
+// with this camera you have to provide four parameters
+// these are the left, right, top and bottom - these are the dimensions of the camera 
+// and the distance from the center of the camera to the left, right, top and bottom
+// we do this because unlike the perspective camera, this camera is like a box
+// and orthographic camera's field of view is not vertical but it's horizontal
+// this camera stretches the objects viewed by it to fit the camera's dimensions
+// this can be solved by calculating the aspect ratio
+const aspectRatio = sizes.width / sizes.height
+
+const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100)
 camera.position.x = 2
 camera.position.y = 2
 camera.position.z = 2
