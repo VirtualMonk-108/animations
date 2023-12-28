@@ -31,23 +31,25 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 
 // Time We create a clock object
-const clock = new THREE.Clock()
+// const clock = new THREE.Clock()
+
+gsap.to(mesh.position, { duration: 1, delay: 1, x: 2 })
 
 // Animation
 const tick = () => {
 
     // Elapsed time
-    const elapsedTime = clock.getElapsedTime() // We get the elapsed time since the clock was created
+    //const elapsedTime = clock.getElapsedTime() // We get the elapsed time since the clock was created
 
     // Update objects
-    mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
-    mesh.rotation.x = elapsedTime // We rotate the mesh on the y axis
+    // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
+    // mesh.rotation.x = elapsedTime // We rotate the mesh on the y axis
 
     // Render - we moved this from outside the tick function to inside it
     renderer.render(scene, camera)
 
     // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
+     window.requestAnimationFrame(tick)
 }
 
 tick()
