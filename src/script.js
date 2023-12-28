@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import gsap from 'gsap'
 
 /*
@@ -40,6 +41,11 @@ const sizes = {
 // the fourth parameter is the far clipping plane - the furthest point that the camera can see
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.z = 3 // We move the camera back on the z axis
+
+
+// Controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
 // Renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
@@ -58,21 +64,24 @@ const tick = () => {
 
     // Update camera 
     // the code below gives a full view of the cube
-    camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
-    camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
-    camera.position.y = cursor.y * 5
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
+    // camera.position.y = cursor.y * 5
 
     // the below code does not give a full view, we cannot see the back of the cube
     // camera.position.x = cursor.x * 10
     // camera.position.y = cursor.y * 10
 
    // camera.lookAt(new THREE.Vector3()) // We make the camera look at the center of the scene
-    camera.lookAt(mesh.position) // We make the camera look at the mesh which gets the same result as the code above
+    // camera.lookAt(mesh.position) // We make the camera look at the mesh which gets the same result as the code above
 
 
     // Update objects
     // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
     // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
+
+    // Update controls
+    controls.update()
 
     // Render - we moved this from outside the tick function to inside it
     renderer.render(scene, camera)
