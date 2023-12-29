@@ -30,15 +30,48 @@ scene.add(mesh)
 
 // Sizes
 const sizes = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
 
+window.addEventListener('resize', () => {
+    // update sizes
+    sizes.width = window.innerWidth
+    sizes.height = window.innerHeight
+    // update camera
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
+    // update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+ })
+
+ window.addEventListener('dblclick', () => {    
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+
+    if(!fullscreenElement){
+        if(canvas.requestFullscreen){
+            canvas.requestFullscreen()
+        }
+        else if(canvas.webkitRequestFullscreen){
+            canvas.webkitRequestFullscreen()
+        }
+    }
+    else{
+        if(document.exitFullscreen){
+            document.exitFullscreen()
+        }
+        else if(document.webkitExitFullscreen){
+            document.webkitExitFullscreen()
+        }
+    }
+}
+)
+
+
+
 // Camera
-// the first parameter is the field of view and it's vertical
-// the second parameter is the aspect ratio and it's horizontal - the width divided by the height
-// the third parameter is the near clipping plane - the closest point that the camera can see
-// the fourth parameter is the far clipping plane - the furthest point that the camera can see
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.z = 3 // We move the camera back on the z axis
 
@@ -51,6 +84,7 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 // Time We create a clock object
 const clock = new THREE.Clock()
@@ -60,25 +94,6 @@ const tick = () => {
 
     // Elapsed time
     const elapsedTime = clock.getElapsedTime() // We get the elapsed time since the clock was created
-
-
-    // Update camera 
-    // the code below gives a full view of the cube
-    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3
-    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3
-    // camera.position.y = cursor.y * 5
-
-    // the below code does not give a full view, we cannot see the back of the cube
-    // camera.position.x = cursor.x * 10
-    // camera.position.y = cursor.y * 10
-
-   // camera.lookAt(new THREE.Vector3()) // We make the camera look at the center of the scene
-    // camera.lookAt(mesh.position) // We make the camera look at the mesh which gets the same result as the code above
-
-
-    // Update objects
-    // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
-    // mesh.rotation.y = elapsedTime // We rotate the mesh on the y axis
 
     // Update controls
     controls.update()
