@@ -26,7 +26,24 @@ const scene = new THREE.Scene()
 const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
 // const geometry = new THREE.SphereGeometry(1, 32, 32)
 
-// Material
+// //Create an empty BufferGeometry
+// const geometry = new THREE.BufferGeometry()
+// //Create a Float32Array containing the vertices positions
+// const count = 50
+// // 3 vertices per triangle, 3 coordinates per vertex
+// // so we create 50 triangles, 3 vertices each, 3 coordinates each
+// const positionsArray = new Float32Array(count * 3 * 3) 
+
+// for(let i = 0; i < count * 3 * 3; i++){
+//     positionsArray[i] = (Math.random() - 0.5) * 4
+// }
+
+// // Create the attribute
+// const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
+// // Set the attribute to the geometry
+// geometry.setAttribute('position', positionsAttribute)
+
+
 const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
