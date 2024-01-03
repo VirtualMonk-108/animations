@@ -2,6 +2,40 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import gsap from 'gsap'
 
+
+/*
+TEXTURES
+*/
+const loadingManager = new THREE.LoadingManager()
+loadingManager.onStart = () => {
+    console.log('loading started')
+}
+loadingManager.onLoad = () => {
+    console.log('loading finished')
+}
+loadingManager.onProgress = () => {
+    console.log('loading progressing')
+}
+loadingManager.onError = () => {
+    console.log('loading error')
+}
+
+const textureLoader = new THREE.TextureLoader(loadingManager)
+
+// const colorTexture = textureLoader.load('/textures/door/color.jpg')
+const colorTexture = textureLoader.load('/textures/minecraft.png')
+colorTexture.colorSpace = THREE.SRGBColorSpace
+colorTexture.generateMipmaps = false
+colorTexture.minFilter = THREE.NearestFilter
+
+const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
+const heightTexture = textureLoader.load('/textures/door/height.jpg')
+const normalTexture = textureLoader.load('/textures/door/normal.jpg')
+const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+
+
 /*
 CURSOR
 We will use native JS to get the mouse coordinates
@@ -12,8 +46,8 @@ const cursor = {
     y: 0
 }
 window.addEventListener('mousemove', (event) => {
-    cursor.x = event.clientX / sizes.width -0.5
-    cursor.y = - (event.clientY / sizes.height -0.5)
+    cursor.x = event.clientX / sizes.width - 0.5
+    cursor.y = - (event.clientY / sizes.height - 0.5)
 })
 
 // Canvas
@@ -25,26 +59,10 @@ const scene = new THREE.Scene()
 // Object
 const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
 // const geometry = new THREE.SphereGeometry(1, 32, 32)
+// const geometry = new THREE.ConeGeometry(1, 1, 32)
+// const geometry = new THREE.TorusGeometry(1, 0.35, 32, 100)
 
-// //Create an empty BufferGeometry
-// const geometry = new THREE.BufferGeometry()
-// //Create a Float32Array containing the vertices positions
-// const count = 50
-// // 3 vertices per triangle, 3 coordinates per vertex
-// // so we create 50 triangles, 3 vertices each, 3 coordinates each
-// const positionsArray = new Float32Array(count * 3 * 3) 
-
-// for(let i = 0; i < count * 3 * 3; i++){
-//     positionsArray[i] = (Math.random() - 0.5) * 4
-// }
-
-// // Create the attribute
-// const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
-// // Set the attribute to the geometry
-// geometry.setAttribute('position', positionsAttribute)
-
-
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false })
+const material = new THREE.MeshBasicMaterial({ map: colorTexture })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 
@@ -65,24 +83,24 @@ window.addEventListener('resize', () => {
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
- })
+})
 
- window.addEventListener('dblclick', () => {    
+window.addEventListener('dblclick', () => {
     const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
 
-    if(!fullscreenElement){
-        if(canvas.requestFullscreen){
+    if (!fullscreenElement) {
+        if (canvas.requestFullscreen) {
             canvas.requestFullscreen()
         }
-        else if(canvas.webkitRequestFullscreen){
+        else if (canvas.webkitRequestFullscreen) {
             canvas.webkitRequestFullscreen()
         }
     }
-    else{
-        if(document.exitFullscreen){
+    else {
+        if (document.exitFullscreen) {
             document.exitFullscreen()
         }
-        else if(document.webkitExitFullscreen){
+        else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen()
         }
     }
@@ -122,7 +140,7 @@ const tick = () => {
     renderer.render(scene, camera)
 
     // Call tick again on the next frame
-     window.requestAnimationFrame(tick)
+    window.requestAnimationFrame(tick)
 }
 
 tick()
