@@ -1,6 +1,33 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import gsap from 'gsap'
+import GUI from 'lil-gui'
+
+
+/*
+DEBUG
+*/
+const gui = new GUI(
+    {
+        width: 300, title: "Yauvan's GUI", 
+        theme: 'dark', 
+        position: 'bottom-right', 
+        closeFolders: false
+    }
+)
+gui.hide()
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'h') {
+        gui.show(gui._hidden)
+    }
+})
+
+const debugObject = {}
+
+
+
+
+
 
 
 /*
@@ -57,14 +84,42 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Object
+
+debugObject.color = '#FABF0C'
 const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2)
 // const geometry = new THREE.SphereGeometry(1, 32, 32)
 // const geometry = new THREE.ConeGeometry(1, 1, 32)
 // const geometry = new THREE.TorusGeometry(1, 0.35, 32, 100)
 
-const material = new THREE.MeshBasicMaterial({ map: colorTexture })
+const material = new THREE.MeshBasicMaterial({ color: debugObject.color, wireframe: true})
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
+
+const cubeTweaks = gui.addFolder('Cube')
+debugObject.clearColor = '#000000'
+cubeTweaks.add(debugObject, 'clearColor').onChange(() => {
+    renderer.setClearColor(debugObject.clearColor)
+}
+)
+debugObject.spin = () => {
+    gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI * 2 })
+}
+cubeTweaks.add(debugObject, 'spin')
+
+cubeTweaks.add(mesh.position, 'y').min(- 3).max(3).step(0.01).name('elevation')
+cubeTweaks.add(mesh, 'visible')
+cubeTweaks.add(material, 'wireframe')
+cubeTweaks.addColor(debugObject, 'color').onChange(() => {
+    material.color.set(debugObject.color)
+}
+)
+
+// Subdivisions
+debugObject.subdivision = 2
+cubeTweaks.add(debugObject, 'subdivision').min(1).max(20).step(1).onFinishChange(() => {
+    mesh.geometry.dispose()
+    mesh.geometry = new THREE.BoxGeometry(1, 1, 1, debugObject.subdivision, debugObject.subdivision, debugObject.subdivision)
+})
 
 // Sizes
 const sizes = {
